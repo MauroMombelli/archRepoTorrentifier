@@ -80,45 +80,53 @@ def downloadRepo(mirrors, repoName):
 		traceback.print_exc()
 		raise
 	
-	for file in fileInRepo:
-		try:
+	ok = False
+	error = 0
+	while error < 3 and not ok:
+		ok = True
+		for file in fileInRepo:
+			try:
 
-			url = random.choice(mirrors) + repoName + '/os/x86_64/'
-			
-			print (file)
-			
-			for letter in file:
-				if (letter < 'a' or letter > 'z') and (letter < 'A' or letter > 'Z') and (letter < '0' or letter > '9') and (not letter in "+-._%:"):
-					raise ValueError('invalid filename, has bad simbols '+str(file))
-			
-			packagename = file.split('-')
-			if len(packagename) < 3:
-				raise ValueError('invalid filename, does not have - '+str(packagename))
-			
-			i = bisect.bisect_left(fileList, file + '.torrent')
-			if i != len(fileList) and fileList[i] == file + '.torrent':
-				#we already have the torrent
-				continue
-			
-			#delete old torrent
-			if i != len(fileList):
-				diskPackagename = fileList[i].split('-')
-				if diskPackagename == packagename:
-					print("found an old torrent, delting " + str(fileList[i]))
-					os.remove(fileList[i])
-			
-			downloaded = download(url, file)
-			
-			torrent = torrentify(mirrors, repoName, downloaded)
-			
-			os.remove(downloaded)
-			
-			publish(torrent)
-			
-			print("file %s torrentified" % (str(packagename[0])))
-		except Exception as e: 
-			print('Exception on file ' + str(file))
-			traceback.print_exc()
+				url = random.choice(mirrors) + repoName + '/os/x86_64/'
+				
+				print (file)
+				
+				for letter in file:
+					if (letter < 'a' or letter > 'z') and (letter < 'A' or letter > 'Z') and (letter < '0' or letter > '9') and (not letter in "+-._%:"):
+						raise ValueError('invalid filename, has bad simbols '+str(file))
+				
+				packagename = file.split('-')
+				if len(packagename) < 3:
+					raise ValueError('invalid filename, does not have - '+str(packagename))
+				
+				i = bisect.bisect_left(fileList, file + '.torrent')
+				if i != len(fileList) and fileList[i] == file + '.torrent':
+					#we already have the torrent
+					continue
+				
+				#delete old torrent
+				if i != len(fileList):
+					diskPackagename = fileList[i].split('-')
+					if diskPackagename == packagename:
+						print("found an old torrent, delting " + str(fileList[i]))
+						os.remove(fileList[i])
+				
+				downloaded = download(url, file)
+				
+				torrent = torrentify(mirrors, repoName, downloaded)
+				
+				os.remove(downloaded)
+				
+				publish(torrent)
+				
+				print("file %s torrentified" % (str(packagename[0])))
+			except Exception as e: 
+				print('Exception on file ' + str(file))
+				traceback.print_exc()
+				ok = False
+		
+		if not ok:
+			error += 1
 
 mirrors = []
 
