@@ -82,14 +82,13 @@ def downloadRepo(mirrors, repoName):
 	
 	for file in fileInRepo:
 		try:
-			file = file.replace('%2B', '+')
-			file = file.replace('%3A', ':')
+
 			url = random.choice(mirrors) + repoName + '/os/x86_64/'
 			
 			print (file)
 			
 			for letter in file:
-				if (letter < 'a' or letter > 'z') and (letter < '0' or letter > '9') and (not letter in "-._"):
+				if (letter < 'a' or letter > 'z') and (letter < '0' or letter > '9') and (not letter in "-._%"):
 					raise ValueError('invalid filename, has bad simbols '+str(file))
 			
 			packagename = file.split('-')
