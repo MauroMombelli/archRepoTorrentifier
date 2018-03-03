@@ -61,7 +61,6 @@ def loadMirror(mirrors, filename):
 def downloadRepo(mirrors, repoName):
 	print("downloading repo " + repoName)
 
-	url = random.choice(mirrors) + repoName + '/os/x86_64/'
 	try:
 		os.makedirs("torrent/" + repoName)
 	except FileExistsError:
@@ -73,6 +72,7 @@ def downloadRepo(mirrors, repoName):
 	fileList = os.listdir("torrent/" + repoName)
 	fileList.sort()
 	
+	url = random.choice(mirrors) + repoName + '/os/x86_64/'
 	try:
 		fileInRepo = listFiles(url, ext)
 	except Exception as e: 
@@ -82,6 +82,8 @@ def downloadRepo(mirrors, repoName):
 	
 	for file in fileInRepo:
 		try:
+			file.replace('%2B', '+')
+			file.replace('%3A', ':')
 			url = random.choice(mirrors) + repoName + '/os/x86_64/'
 			
 			print (file)
@@ -132,7 +134,8 @@ while True:
 		print('Exception on download repo')
 		traceback.print_exc()
 	
-	time.sleep(60*60) #every hour
+	print('waiting for next itereation')
+	time.sleep(60*10) #every 10 minutes
 	
 
 
