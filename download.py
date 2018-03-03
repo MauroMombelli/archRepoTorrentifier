@@ -82,8 +82,8 @@ def downloadRepo(mirrors, repoName):
 	
 	for file in fileInRepo:
 		try:
-			file.replace('%2B', '+')
-			file.replace('%3A', ':')
+			file = file.replace('%2B', '+')
+			file = file.replace('%3A', ':')
 			url = random.choice(mirrors) + repoName + '/os/x86_64/'
 			
 			print (file)
