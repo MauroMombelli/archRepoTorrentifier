@@ -1,0 +1,11 @@
+[Unit]
+Description=Arch linux repo torrentifier
+After=network.target
+User=archie
+
+[Service]
+Type=simple
+ExecStart=/home/archie/archRepoTorrentifier/run.sh
+
+[Install]
+WantedBy=multi-user.target
